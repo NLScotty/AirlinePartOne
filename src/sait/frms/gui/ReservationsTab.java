@@ -54,6 +54,9 @@ public class ReservationsTab extends TabBase
 		
 		JPanel southPanel = createSouthPanel();
 		panel.add(southPanel,BorderLayout.SOUTH);
+		
+		JPanel eastPanel = createEastPanel();
+		panel.add(eastPanel,BorderLayout.EAST);
 	}
 	
 	/**
@@ -146,7 +149,77 @@ public class ReservationsTab extends TabBase
 		
 		return masterPanel;
 	}
-	
+	//create East Panel
+	private JPanel createEastPanel() {
+		JPanel masterPanel = new JPanel();
+		masterPanel.setLayout(new BorderLayout());
+		
+		JPanel titlePanel = new JPanel();
+		JPanel inputPanel = new JPanel();
+		JPanel buttonPanel = new JPanel();
+		
+		//Title Panel
+		titlePanel.setLayout(new GridLayout(2,1));
+		JLabel title = new JLabel("Reserve", SwingConstants.CENTER);
+		title.setFont(new Font("serif", Font.PLAIN, 29));
+		titlePanel.add(title);
+		
+		//Input Panel
+		
+		inputPanel.setLayout(new GridLayout(8,2));
+		JLabel codeLabel = new JLabel("Code:");
+		JLabel flightLabel = new JLabel("Flight:");
+		JLabel airlineLabel = new JLabel("Airline:");
+		JLabel costLabel = new JLabel("Cost:");
+		JLabel nameLabel = new JLabel("Name:");
+		JLabel citizenshipLabel = new JLabel("Citizenship:");
+		JLabel statusLabel = new JLabel("Status:");
+
+		String[] statusOptions = {"Active","Inactive"};
+		
+		JTextField codeTextField = new JTextField();
+		codeTextField.setEditable(false);
+		JTextField flightTextField = new JTextField();
+		flightTextField.setEditable(false);
+		JTextField airlineTextField = new JTextField();
+		airlineTextField.setEditable(false);
+		JTextField costTextField = new JTextField();
+		costTextField.setEditable(false);
+		JTextField nameTextField = new JTextField();
+		JTextField citizenshipTextField = new JTextField();
+		JComboBox statusComboBox = new JComboBox(statusOptions);
+
+		
+		//Button Panel
+		
+		buttonPanel.setLayout(new GridLayout(1,1));
+		JButton updateButton = new JButton("Update");
+		buttonPanel.add(updateButton);
+		
+		inputPanel.add(codeLabel);
+		inputPanel.add(codeTextField);
+		inputPanel.add(flightLabel);
+		inputPanel.add(flightTextField);
+		inputPanel.add(airlineLabel);
+		inputPanel.add(airlineTextField);
+		inputPanel.add(costLabel);
+		inputPanel.add(costTextField);
+		inputPanel.add(nameLabel);
+		inputPanel.add(nameTextField);
+		inputPanel.add(citizenshipLabel);
+		inputPanel.add(citizenshipTextField);
+		inputPanel.add(statusLabel);
+		inputPanel.add(statusComboBox);
+		
+		
+		masterPanel.add(titlePanel, BorderLayout.NORTH);
+		masterPanel.add(inputPanel, BorderLayout.CENTER);
+		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
+		
+		
+		
+		return masterPanel;
+	}
 	
 	private class MyListSelectionListener implements ListSelectionListener 
 	{

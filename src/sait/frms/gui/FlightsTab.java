@@ -54,6 +54,9 @@ public class FlightsTab extends TabBase
 		
 		JPanel southPanel = createSouthPanel();
 		panel.add(southPanel,BorderLayout.SOUTH);
+		
+		JPanel eastPanel = createEastPanel();
+		panel.add(eastPanel, BorderLayout.EAST);
 	}
 	
 	/**
@@ -118,10 +121,11 @@ public class FlightsTab extends TabBase
 		JLabel fromLabel = new JLabel("From:");
 		JLabel toLabel = new JLabel("To:");
 		JLabel dayLabel = new JLabel("Day:");
-		String[] values = {"Volvo", "BMW", "Ford", "Mazda"};
-		JComboBox fromBox = new JComboBox(values);
-		JComboBox toBox = new JComboBox(values);
-		JComboBox dayBox = new JComboBox(values);
+		String[] values1 = {"YYC"};
+		String[] values2 = {"Any"};
+		JComboBox fromBox = new JComboBox(values1);
+		JComboBox toBox = new JComboBox(values1);
+		JComboBox dayBox = new JComboBox(values2);
 		
 		//Button Panel
 		
@@ -146,6 +150,79 @@ public class FlightsTab extends TabBase
 		
 		return masterPanel;
 	}
+	
+	
+	//create East Panel
+	private JPanel createEastPanel() {
+		JPanel masterPanel = new JPanel();
+		masterPanel.setLayout(new BorderLayout());
+		
+		JPanel titlePanel = new JPanel();
+		JPanel inputPanel = new JPanel();
+		JPanel buttonPanel = new JPanel();
+		
+		//Title Panel
+		titlePanel.setLayout(new GridLayout(2,1));
+		JLabel title = new JLabel("Reserve", SwingConstants.CENTER);
+		title.setFont(new Font("serif", Font.PLAIN, 29));
+		titlePanel.add(title);
+		
+		//Input Panel
+		
+		inputPanel.setLayout(new GridLayout(8,2));
+		JLabel flightLabel = new JLabel("Flight:");
+		JLabel airlineLabel = new JLabel("Airline:");
+		JLabel dayLabel = new JLabel("Day:");
+		JLabel timeLabel = new JLabel("Time:");
+		JLabel costLabel = new JLabel("Cost:");
+		JLabel nameLabel = new JLabel("Name:");
+		JLabel citizenshipLabel = new JLabel("Citizenship:");
+		
+		JTextField flightTextField = new JTextField();
+		flightTextField.setEditable(false);
+		JTextField airlineTextField = new JTextField();
+		airlineTextField.setEditable(false);
+		JTextField dayTextField = new JTextField();
+		dayTextField.setEditable(false);
+		JTextField timeTextField = new JTextField();
+		timeTextField.setEditable(false);
+		JTextField costTextField = new JTextField();
+		costTextField.setEditable(false);
+		JTextField nameTextField = new JTextField();
+		JTextField citizenshipTextField = new JTextField();
+
+		
+		//Button Panel
+		
+		buttonPanel.setLayout(new GridLayout(1,1));
+		JButton reserveButton = new JButton("Reserve");
+		buttonPanel.add(reserveButton);
+		
+		inputPanel.add(flightLabel);
+		inputPanel.add(flightTextField);
+		inputPanel.add(airlineLabel);
+		inputPanel.add(airlineTextField);
+		inputPanel.add(dayLabel);
+		inputPanel.add(dayTextField);
+		inputPanel.add(timeLabel);
+		inputPanel.add(timeTextField);
+		inputPanel.add(costLabel);
+		inputPanel.add(costTextField);
+		inputPanel.add(nameLabel);
+		inputPanel.add(nameTextField);
+		inputPanel.add(citizenshipLabel);
+		inputPanel.add(citizenshipTextField);
+		
+		
+		masterPanel.add(titlePanel, BorderLayout.NORTH);
+		masterPanel.add(inputPanel, BorderLayout.CENTER);
+		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
+		
+		
+		
+		return masterPanel;
+	}
+	
 	
 	
 	private class MyListSelectionListener implements ListSelectionListener 
