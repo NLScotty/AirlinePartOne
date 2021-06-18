@@ -2,10 +2,11 @@ package sait.frms.gui;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 
 import sait.frms.manager.ReservationManager;
-import sait.frms.manager.ReservationManager;
+import sait.frms.manager.FlightManager;
 import sait.frms.problemdomain.Reservation;
 
 /**
@@ -15,9 +16,9 @@ import sait.frms.problemdomain.Reservation;
 public class ReservationsTab extends TabBase 
 {
 	/**
-	 * Instance of Reservation manager.
+	 * Instance of flight manager.
 	 */
-	private ReservationManager ReservationManager;
+	private FlightManager flightManager;
 	
 	/**
 	 * Instance of reservation manager.
@@ -27,9 +28,9 @@ public class ReservationsTab extends TabBase
 	/**
 	 * List of Reservations.
 	 */
-	private JList<Reservation> ReservationsList;
+	private JList<Reservation> reservationsList;
 	
-	private DefaultListModel<Reservation> ReservationsModel;
+	private DefaultListModel<Reservation> reservationsModel;
 	
 	/**
 	 * Creates the components for Reservations tab.
@@ -83,19 +84,19 @@ public class ReservationsTab extends TabBase
 		JPanel panel = new JPanel();
 		
 		panel.setLayout(new BorderLayout());
-		
-		ReservationsModel = new DefaultListModel<>();
-		ReservationsList = new JList<>(ReservationsModel);
+		panel.setBorder(new EmptyBorder(10,10,10,10));
+		reservationsModel = new DefaultListModel<>();
+		reservationsList = new JList<>(reservationsModel);
 		
 		// User can only select one item at a time.
-		ReservationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		reservationsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
 		// Wrap JList in JScrollPane so it is scrollable.
-		JScrollPane scrollPane = new JScrollPane(this.ReservationsList);
+		JScrollPane scrollPane = new JScrollPane(this.reservationsList);
 		
-		ReservationsList.addListSelectionListener(new MyListSelectionListener());
+		reservationsList.addListSelectionListener(new MyListSelectionListener());
 		
-		panel.add(scrollPane);
+		panel.add(scrollPane,BorderLayout.CENTER);
 		
 		return panel;
 	}
@@ -117,29 +118,62 @@ public class ReservationsTab extends TabBase
 		
 		//Input Panel
 		
-		inputPanel.setLayout(new GridLayout(3,2));
-		JLabel codeLabel = new JLabel("Code:");
-		JLabel airlineLabel = new JLabel("Airline:");
-		JLabel nameLabel = new JLabel("Name:");
+		inputPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.fill=GridBagConstraints.HORIZONTAL;
+		
 
+		c.weightx=0.05;
+		c.gridx=0;
+		c.gridy=0;
+		c.gridwidth=1;
+		JLabel codeLabel = new JLabel("Code:");
+		codeLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(codeLabel,c);
+		
+		c.weightx=0.05;
+		c.gridx=0;
+		c.gridy=1;
+		c.gridwidth=1;
+		JLabel airlineLabel = new JLabel("Airline:");
+		airlineLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(airlineLabel,c);
+		
+		c.weightx=0.05;
+		c.gridx=0;
+		c.gridy=2;
+		c.gridwidth=1;
+		JLabel nameLabel = new JLabel("Name:");
+		nameLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(nameLabel,c);
+
+		c.weightx=0.95;
+		c.gridx=1;
+		c.gridy=0;
+		c.gridwidth=400;
 		JTextField codeTextField = new JTextField();
+		inputPanel.add(codeTextField,c);
+		
+		c.weightx=0.95;
+		c.gridx=1;
+		c.gridy=1;
+		c.gridwidth=400;
 		JTextField airlineTextField = new JTextField();
+		inputPanel.add(airlineTextField,c);
+		
+		c.weightx=0.95;
+		c.gridx=1;
+		c.gridy=2;
+		c.gridwidth=400;
 		JTextField nameTextField = new JTextField();
+		inputPanel.add(nameTextField,c);
 		
 		//Button Panel
 		
 		buttonPanel.setLayout(new GridLayout(1,1));
 		JButton findReservationButton = new JButton("Find Reservations");
 		buttonPanel.add(findReservationButton);
-		
-		inputPanel.add(codeLabel);
-		inputPanel.add(codeTextField);
-		
-		inputPanel.add(airlineLabel);
-		inputPanel.add(airlineTextField);
-		
-		inputPanel.add(nameLabel);
-		inputPanel.add(nameTextField);
 		
 		masterPanel.add(titlePanel, BorderLayout.NORTH);
 		masterPanel.add(inputPanel, BorderLayout.CENTER);
@@ -158,6 +192,7 @@ public class ReservationsTab extends TabBase
 		JPanel inputPanel = new JPanel();
 		JPanel buttonPanel = new JPanel();
 		
+		
 		//Title Panel
 		titlePanel.setLayout(new GridLayout(2,1));
 		JLabel title = new JLabel("Reserve", SwingConstants.CENTER);
@@ -166,61 +201,109 @@ public class ReservationsTab extends TabBase
 		
 		//Input Panel
 		
-		inputPanel.setLayout(new GridLayout(8,2));
+		inputPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridx=0;
+		c.gridy=0;
 		JLabel codeLabel = new JLabel("Code:");
+		codeLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(codeLabel,c);
+		
+		c.gridx=1;
+		c.gridy=0;
+		JTextField codeTextField = new JTextField(10);
+		codeTextField.setEditable(false);
+		inputPanel.add(codeTextField,c);
+		
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridx=0;
+		c.gridy=1;
 		JLabel flightLabel = new JLabel("Flight:");
+		flightLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(flightLabel,c);
+		
+		c.gridx=1;
+		c.gridy=1;
+		JTextField flightTextField = new JTextField(10);
+		flightTextField.setEditable(false);
+		inputPanel.add(flightTextField,c);
+		
+		c.gridx=0;
+		c.gridy=2;
 		JLabel airlineLabel = new JLabel("Airline:");
+		airlineLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(airlineLabel,c);
+		
+		c.gridx=1;
+		c.gridy=2;
+		JTextField airlineTextField = new JTextField(10);
+		airlineTextField.setEditable(false);
+		inputPanel.add(airlineTextField,c);
+		
+		c.gridx=0;
+		c.gridy=3;
 		JLabel costLabel = new JLabel("Cost:");
+		costLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(costLabel,c);
+		
+		c.gridx=1;
+		c.gridy=3;
+		JTextField costTextField = new JTextField(10);
+		costTextField.setEditable(false);
+		inputPanel.add(costTextField,c);
+		
+		c.gridx=0;
+		c.gridy=4;
 		JLabel nameLabel = new JLabel("Name:");
+		nameLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(nameLabel,c);
+
+		c.gridx=1;
+		c.gridy=4;
+		JTextField nameTextField = new JTextField(10);
+		inputPanel.add(nameTextField,c);
+		
+		c.gridx=0;
+		c.gridy=5;
 		JLabel citizenshipLabel = new JLabel("Citizenship:");
+		citizenshipLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(citizenshipLabel,c);
+		
+		c.gridx=1;
+		c.gridy=5;
+		JTextField citizenshipTextField = new JTextField(10);
+		inputPanel.add(citizenshipTextField,c);
+		
+		c.gridx=0;
+		c.gridy=6;
 		JLabel statusLabel = new JLabel("Status:");
+		statusLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(statusLabel,c);
 
 		String[] statusOptions = {"Active","Inactive"};
-		
-		JTextField codeTextField = new JTextField();
-		codeTextField.setEditable(false);
-		JTextField flightTextField = new JTextField();
-		flightTextField.setEditable(false);
-		JTextField airlineTextField = new JTextField();
-		airlineTextField.setEditable(false);
-		JTextField costTextField = new JTextField();
-		costTextField.setEditable(false);
-		JTextField nameTextField = new JTextField();
-		JTextField citizenshipTextField = new JTextField();
+		c.gridx=1;
+		c.gridy=6;
 		JComboBox statusComboBox = new JComboBox(statusOptions);
-
+		inputPanel.add(statusComboBox,c);
 		
 		//Button Panel
 		
 		buttonPanel.setLayout(new GridLayout(1,1));
-		JButton updateButton = new JButton("Update");
-		buttonPanel.add(updateButton);
-		
-		inputPanel.add(codeLabel);
-		inputPanel.add(codeTextField);
-		inputPanel.add(flightLabel);
-		inputPanel.add(flightTextField);
-		inputPanel.add(airlineLabel);
-		inputPanel.add(airlineTextField);
-		inputPanel.add(costLabel);
-		inputPanel.add(costTextField);
-		inputPanel.add(nameLabel);
-		inputPanel.add(nameTextField);
-		inputPanel.add(citizenshipLabel);
-		inputPanel.add(citizenshipTextField);
-		inputPanel.add(statusLabel);
-		inputPanel.add(statusComboBox);
+		JButton reserveButton = new JButton("Reserve");
+		buttonPanel.add(reserveButton);
 		
 		
 		masterPanel.add(titlePanel, BorderLayout.NORTH);
 		masterPanel.add(inputPanel, BorderLayout.CENTER);
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
+		inputPanel.setPreferredSize(new Dimension(200, 200));
 		
 		
 		return masterPanel;
 	}
-	
 	private class MyListSelectionListener implements ListSelectionListener 
 	{
 		/**
