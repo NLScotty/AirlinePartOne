@@ -2,6 +2,7 @@ package sait.frms.gui;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 
 import sait.frms.manager.FlightManager;
@@ -83,7 +84,7 @@ public class FlightsTab extends TabBase
 		JPanel panel = new JPanel();
 		
 		panel.setLayout(new BorderLayout());
-		
+		panel.setBorder(new EmptyBorder(10,10,10,10));
 		flightsModel = new DefaultListModel<>();
 		flightsList = new JList<>(flightsModel);
 		
@@ -95,7 +96,7 @@ public class FlightsTab extends TabBase
 		
 		flightsList.addListSelectionListener(new MyListSelectionListener());
 		
-		panel.add(scrollPane);
+		panel.add(scrollPane,BorderLayout.CENTER);
 		
 		return panel;
 	}
@@ -117,15 +118,61 @@ public class FlightsTab extends TabBase
 		
 		//Input Panel
 		
-		inputPanel.setLayout(new GridLayout(3,2));
-		JLabel fromLabel = new JLabel("From:");
-		JLabel toLabel = new JLabel("To:");
-		JLabel dayLabel = new JLabel("Day:");
 		String[] values1 = {"YYC"};
 		String[] values2 = {"Any"};
+		
+		inputPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		
+		c.fill=GridBagConstraints.HORIZONTAL;
+		
+
+		c.weightx=0.05;
+		c.gridx=0;
+		c.gridy=0;
+		c.gridwidth=1;
+		JLabel fromLabel = new JLabel("From:");
+		fromLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(fromLabel,c);
+		
+		c.weightx=0.95;
+		c.gridx=1;
+		c.gridy=0;
+		c.gridwidth=400;
 		JComboBox fromBox = new JComboBox(values1);
+		//fromBox.setPrototypeDisplayValue("                                                                                                                                                          ");
+		fromBox.setPreferredSize(new Dimension(30,200));
+		inputPanel.add(fromBox,c);
+		
+		c.weightx=0.05;
+		c.gridx=0;
+		c.gridy=1;
+		c.gridwidth=1;
+		JLabel toLabel = new JLabel("To:");
+		toLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(toLabel,c);
+		
+		c.weightx=0.95;
+		c.gridx=1;
+		c.gridy=1;
+		c.gridwidth=400;
 		JComboBox toBox = new JComboBox(values1);
+		inputPanel.add(toBox,c);
+		
+		c.weightx=0.05;
+		c.gridx=0;
+		c.gridy=2;
+		c.gridwidth=1;
+		JLabel dayLabel = new JLabel("Day:");
+		dayLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(dayLabel,c);
+		
+		c.weightx=0.95;
+		c.gridx=1;
+		c.gridy=2;
+		c.gridwidth=400;
 		JComboBox dayBox = new JComboBox(values2);
+		inputPanel.add(dayBox,c);
 		
 		//Button Panel
 		
@@ -133,18 +180,12 @@ public class FlightsTab extends TabBase
 		JButton findFlightButton = new JButton("Find Flights");
 		buttonPanel.add(findFlightButton);
 		
-		inputPanel.add(fromLabel);
-		inputPanel.add(fromBox);
-		
-		inputPanel.add(toLabel);
-		inputPanel.add(toBox);
-		
-		inputPanel.add(dayLabel);
-		inputPanel.add(dayBox);
 		
 		masterPanel.add(titlePanel, BorderLayout.NORTH);
 		masterPanel.add(inputPanel, BorderLayout.CENTER);
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
+		
+		inputPanel.setPreferredSize(new Dimension(600, 120));
 		
 		
 		
@@ -161,6 +202,7 @@ public class FlightsTab extends TabBase
 		JPanel inputPanel = new JPanel();
 		JPanel buttonPanel = new JPanel();
 		
+		
 		//Title Panel
 		titlePanel.setLayout(new GridLayout(2,1));
 		JLabel title = new JLabel("Reserve", SwingConstants.CENTER);
@@ -169,28 +211,91 @@ public class FlightsTab extends TabBase
 		
 		//Input Panel
 		
-		inputPanel.setLayout(new GridLayout(8,2));
-		JLabel flightLabel = new JLabel("Flight:");
-		JLabel airlineLabel = new JLabel("Airline:");
-		JLabel dayLabel = new JLabel("Day:");
-		JLabel timeLabel = new JLabel("Time:");
-		JLabel costLabel = new JLabel("Cost:");
-		JLabel nameLabel = new JLabel("Name:");
-		JLabel citizenshipLabel = new JLabel("Citizenship:");
+		inputPanel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
 		
-		JTextField flightTextField = new JTextField();
+		c.fill=GridBagConstraints.HORIZONTAL;
+		c.gridx=0;
+		c.gridy=0;
+		JLabel flightLabel = new JLabel("Flight:");
+		flightLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(flightLabel,c);
+		
+		c.gridx=1;
+		c.gridy=0;
+		JTextField flightTextField = new JTextField(10);
 		flightTextField.setEditable(false);
-		JTextField airlineTextField = new JTextField();
+		inputPanel.add(flightTextField,c);
+		
+		c.gridx=0;
+		c.gridy=1;
+		JLabel airlineLabel = new JLabel("Airline:");
+		airlineLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(airlineLabel,c);
+		
+		c.gridx=1;
+		c.gridy=1;
+		JTextField airlineTextField = new JTextField(10);
 		airlineTextField.setEditable(false);
-		JTextField dayTextField = new JTextField();
+		inputPanel.add(airlineTextField,c);
+		
+		c.gridx=0;
+		c.gridy=2;
+		JLabel dayLabel = new JLabel("Day:");
+		dayLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(dayLabel,c);
+		
+		c.gridx=1;
+		c.gridy=2;
+		JTextField dayTextField = new JTextField(10);
 		dayTextField.setEditable(false);
-		JTextField timeTextField = new JTextField();
-		timeTextField.setEditable(false);
-		JTextField costTextField = new JTextField();
-		costTextField.setEditable(false);
-		JTextField nameTextField = new JTextField();
-		JTextField citizenshipTextField = new JTextField();
+		inputPanel.add(dayTextField,c);
+		
+		c.gridx=0;
+		c.gridy=3;
+		JLabel timeLabel = new JLabel("Time:");
+		timeLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(timeLabel,c);
 
+		c.gridx=1;
+		c.gridy=3;
+		JTextField timeTextField = new JTextField(10);
+		timeTextField.setEditable(false);
+		inputPanel.add(timeTextField,c);
+		
+		c.gridx=0;
+		c.gridy=4;
+		JLabel costLabel = new JLabel("Cost:");
+		costLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(costLabel,c);
+		
+		c.gridx=1;
+		c.gridy=4;
+		JTextField costTextField = new JTextField(10);
+		costTextField.setEditable(false);
+		inputPanel.add(costTextField,c);
+		
+		c.gridx=0;
+		c.gridy=5;
+		JLabel nameLabel = new JLabel("Name:");
+		nameLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(nameLabel,c);
+		
+		c.gridx=1;
+		c.gridy=5;
+		JTextField nameTextField = new JTextField(10);
+		inputPanel.add(nameTextField,c);
+		
+		c.gridx=0;
+		c.gridy=6;
+		JLabel citizenshipLabel = new JLabel("Citizenship:");
+		citizenshipLabel.setHorizontalAlignment(JLabel.RIGHT);
+		inputPanel.add(citizenshipLabel,c);
+		
+		c.gridx=1;
+		c.gridy=6;
+		JTextField citizenshipTextField = new JTextField(10);
+		inputPanel.add(citizenshipTextField,c);
 		
 		//Button Panel
 		
@@ -198,26 +303,12 @@ public class FlightsTab extends TabBase
 		JButton reserveButton = new JButton("Reserve");
 		buttonPanel.add(reserveButton);
 		
-		inputPanel.add(flightLabel);
-		inputPanel.add(flightTextField);
-		inputPanel.add(airlineLabel);
-		inputPanel.add(airlineTextField);
-		inputPanel.add(dayLabel);
-		inputPanel.add(dayTextField);
-		inputPanel.add(timeLabel);
-		inputPanel.add(timeTextField);
-		inputPanel.add(costLabel);
-		inputPanel.add(costTextField);
-		inputPanel.add(nameLabel);
-		inputPanel.add(nameTextField);
-		inputPanel.add(citizenshipLabel);
-		inputPanel.add(citizenshipTextField);
-		
 		
 		masterPanel.add(titlePanel, BorderLayout.NORTH);
 		masterPanel.add(inputPanel, BorderLayout.CENTER);
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
+		inputPanel.setPreferredSize(new Dimension(200, 200));
 		
 		
 		return masterPanel;
