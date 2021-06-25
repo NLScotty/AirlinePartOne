@@ -1,9 +1,12 @@
 package sait.frms.manager;
 
-import java.util.ArrayList;
+import java.util.*;
 import sait.frms.problemdomain.*;
+import java.io.*;
 
 public class FlightManager {
+	private final String FLIGHTS_PATH="res/flights.csv";
+	private final String AIRPORTS_PATH="res/flights.csv";
 	public final static String WEEKDAY_ANY="ANY";
 	public final static String WEEKDAY_SUNDAY="SUNDAY";
 	public final static String WEEKDAY_MONDAY="MONDAY";
@@ -16,15 +19,30 @@ public class FlightManager {
 	private ArrayList<Flight> flights;
 	private ArrayList<String> airports;
 	
-	public FlightManager() {
+	//to be modified
+	public FlightManager() throws IOException {
 		super();
-		// TODO Auto-generated constructor stub
+		this.airports = new ArrayList<String>();
+		Scanner fileReader=new Scanner(new File(AIRPORTS_PATH));
+		while(fileReader.hasNextLine()) {
+			airports.add(fileReader.nextLine());
+		}
+		fileReader.close();
+		fileReader=new Scanner(new File(FLIGHTS_PATH));
+		this.flights = new ArrayList<Flight>();
+		while(fileReader.hasNextLine()) {
+			String[] values = fileReader.nextLine().split(",");	
+			flights.add(new Flight(values[0],values[1],values[2],values[3],values[4],Integer.parseInt(values[5]),Double.parseDouble(values[6])));
+		}
+		/**
+		for(String airport: airports) {
+			System.out.println(airport);
+		}
+		*/
 	}
-
 	public ArrayList<Flight> getFlights() {
 		return flights;
 	}
-
 	public ArrayList<String> getAirports() {
 		return airports;
 	}
@@ -33,13 +51,27 @@ public class FlightManager {
 		return "";
 	}
 	public Flight findFlightByCode(String code) {
-
+		for(int i=0;i<this.flights.size();i++) {
+			if(flights.get(i).getCode().equals(code)) {
+				return flights.get(i);
+			}
+		}
+		return null;
 	}
 	public ArrayList<Flight> findFlights(String from, String to, String weekday){ 
+		ArrayList<Flight> matchingFlights = new ArrayList<Flight>();
+		for(int i=0;i<this.flights.size();i++) {
+			if(flights.get(i).getFrom().equals(from) && flights.get(i).getTo().equals(to)  && flights.get(i).getWeekday().equals(weekday) ) {
+				matchingFlights.add(flights.get(i));
+			}
+		}
+		return matchingFlights;
 	}
+	//Maybe for loading csv
 	private void populateFlights() {
 		
 	}
+	//Maybe for loading csv
 	private void populateAirports() {
 		
 	}

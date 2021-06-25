@@ -12,13 +12,13 @@ public class Flight {
 	
 	//Constructor
 	
-	public Flight(String code, String airlineName, String from, String to, String weekday, String time, int seats,
-			double costPerSeat) {
+	public Flight(String code, String fromCode, String toCode, String weekday, String time, int seats, double costPerSeat) {
 		super();
 		this.code = code;
-		this.airlineName = airlineName;
-		this.from = from;
-		this.to = to;
+		//this.airlineName = airlineName;
+		parseCode(this.code);
+		this.from = fromCode;
+		this.to = toCode;
 		this.weekday = weekday;
 		this.time = time;
 		this.seats = seats;
@@ -66,7 +66,8 @@ public class Flight {
 	}
 	
 	private void parseCode(String code) {
-		
+		//generate airline name
+		//this.airlineName=parsed informaton
 	}
 	//needs some tweaking
 	@Override
