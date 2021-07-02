@@ -58,10 +58,17 @@ public class FlightManager {
 		}
 		return null;
 	}
+	
+	//needs to be changed so that on any, will select all to and from.
 	public ArrayList<Flight> findFlights(String from, String to, String weekday){ 
 		ArrayList<Flight> matchingFlights = new ArrayList<Flight>();
 		for(int i=0;i<this.flights.size();i++) {
-			if(flights.get(i).getFrom().equals(from) && flights.get(i).getTo().equals(to)  && flights.get(i).getWeekday().equals(weekday) ) {
+			if(weekday.equals("Any")) {
+				if(flights.get(i).getFrom().equals(from) && flights.get(i).getTo().equals(to)) {
+					matchingFlights.add(flights.get(i));
+				}
+			}
+			else if(flights.get(i).getFrom().equals(from) && flights.get(i).getTo().equals(to)  && flights.get(i).getWeekday().equals(weekday) ) {
 				matchingFlights.add(flights.get(i));
 			}
 		}

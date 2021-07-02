@@ -1,6 +1,10 @@
 package sait.frms.gui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
@@ -28,6 +32,9 @@ public class FlightsTab extends TabBase
 	/**
 	 * List of flights.
 	 */
+	
+	
+	
 	private JList<Flight> flightsList;
 	
 	private DefaultListModel<Flight> flightsModel;
@@ -86,6 +93,7 @@ public class FlightsTab extends TabBase
 		panel.setLayout(new BorderLayout());
 		panel.setBorder(new EmptyBorder(10,10,10,10));
 		flightsModel = new DefaultListModel<>();
+		flightsModel.addElement(new Flight("Pizza","Pizza","Pizza","Pizza","Pizza",12,21.5));
 		flightsList = new JList<>(flightsModel);
 		
 		// User can only select one item at a time.
@@ -94,7 +102,7 @@ public class FlightsTab extends TabBase
 		// Wrap JList in JScrollPane so it is scrollable.
 		JScrollPane scrollPane = new JScrollPane(this.flightsList);
 		
-		flightsList.addListSelectionListener(new MyListSelectionListener());
+		flightsList.addListSelectionListener(new FlightsTabListActionListener());
 		
 		panel.add(scrollPane,BorderLayout.CENTER);
 		
@@ -118,8 +126,9 @@ public class FlightsTab extends TabBase
 		
 		//Input Panel
 		
-		String[] values1 = {"YYC"};
-		String[] values2 = {"Any"};
+		String[] toValues = {"AMS","ATL","CDG","DEL","DFW","DXB","FRA","HKG","HND","LHR","ORD","PEK","PVG","YEG","YOW","YUL","YVR","YWG","YYC","YYZ"} ;
+		String[] fromValues = {"AMS","ATL","CDG","DEL","DFW","DXB","FRA","HKG","HND","LHR","ORD","PEK","PVG","YEG","YOW","YUL","YVR","YWG","YYC","YYZ"} ;
+		String[] dayValues = {"Any","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 		
 		inputPanel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -139,7 +148,7 @@ public class FlightsTab extends TabBase
 		c.gridx=1;
 		c.gridy=0;
 		c.gridwidth=400;
-		JComboBox fromBox = new JComboBox(values1);
+		JComboBox fromBox = new JComboBox(fromValues);
 		//fromBox.setPrototypeDisplayValue("                                                                                                                                                          ");
 		fromBox.setPreferredSize(new Dimension(30,200));
 		inputPanel.add(fromBox,c);
@@ -156,7 +165,7 @@ public class FlightsTab extends TabBase
 		c.gridx=1;
 		c.gridy=1;
 		c.gridwidth=400;
-		JComboBox toBox = new JComboBox(values1);
+		JComboBox toBox = new JComboBox(toValues);
 		inputPanel.add(toBox,c);
 		
 		c.weightx=0.05;
@@ -171,13 +180,36 @@ public class FlightsTab extends TabBase
 		c.gridx=1;
 		c.gridy=2;
 		c.gridwidth=400;
-		JComboBox dayBox = new JComboBox(values2);
+		JComboBox dayBox = new JComboBox(dayValues);
 		inputPanel.add(dayBox,c);
 		
 		//Button Panel
 		
 		buttonPanel.setLayout(new GridLayout(1,1));
 		JButton findFlightButton = new JButton("Find Flights");
+		
+		//nested class for action listener
+		
+		class FlightsTabFindFlightsActionListener implements ActionListener{
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String toSelection = (String) toBox.getSelectedItem();
+				String fromSelection = (String) fromBox.getSelectedItem();
+				String daySelection = (String) dayBox.getSelectedItem();
+
+				ArrayList<Flight> matchingFlightList = flightManager.findFlights(fromSelection, toSelection, daySelection);
+
+				flightsModel.clear();
+				
+				for(Flight flight : matchingFlightList) {
+					flightsModel.addElement(flight);
+				}
+			}
+			
+		}
+		
+		findFlightButton.addActionListener(new FlightsTabFindFlightsActionListener());
 		buttonPanel.add(findFlightButton);
 		
 		
@@ -315,9 +347,10 @@ public class FlightsTab extends TabBase
 	}
 	
 	
+
 	
-	private class MyListSelectionListener implements ListSelectionListener 
-	{
+	
+	private class FlightsTabListActionListener implements ListSelectionListener{
 		/**
 		 * Called when user selects an item in the JList.
 		 */
