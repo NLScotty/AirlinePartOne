@@ -106,9 +106,9 @@ public class MainWindow extends JFrame
 	/**
 	 * Creates the center panel.
 	 * @return JPanel that goes in center.
+	 * @throws IOException 
 	 */
-	private JPanel createCenterPanel() 
-	{
+	private JPanel createCenterPanel() throws IOException {
 		JPanel panel = new JPanel();
 		
 		cardLayout = new CardLayout();

@@ -3,6 +3,8 @@ package sait.frms.gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -12,6 +14,7 @@ import javax.swing.event.*;
 import sait.frms.manager.FlightManager;
 import sait.frms.manager.ReservationManager;
 import sait.frms.problemdomain.Flight;
+import sait.frms.problemdomain.Reservation;
 
 /**
  * Holds the components for the flights tab.
@@ -29,6 +32,7 @@ public class FlightsTab extends TabBase
 	 */
 	private ReservationManager reservationManager;
 	
+	RandomAccessFile reservationsFile;
 	/**
 	 * List of flights.
 	 */
@@ -48,9 +52,10 @@ public class FlightsTab extends TabBase
 	 * @param flightManager Instance of FlightManager.
 	 * @param reservationManager Instance of ReservationManager
 	 */
-	public FlightsTab(FlightManager flightManager, ReservationManager reservationManager) {
+	public FlightsTab(FlightManager flightManager, ReservationManager reservationManager) throws IOException {
 		this.flightManager = flightManager;
 		this.reservationManager = reservationManager;
+		this.reservationsFile = new RandomAccessFile("res/Reservations.bin", "rw");
 		
 		panel.setLayout(new BorderLayout());
 		
@@ -102,7 +107,7 @@ public class FlightsTab extends TabBase
 		// Wrap JList in JScrollPane so it is scrollable.
 		JScrollPane scrollPane = new JScrollPane(this.flightsList);
 		
-		flightsList.addListSelectionListener(new FlightsTabListActionListener());
+		//flightsList.addListSelectionListener(new FlightsTabListActionListener());
 		
 		panel.add(scrollPane,BorderLayout.CENTER);
 		
@@ -194,12 +199,13 @@ public class FlightsTab extends TabBase
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				String toSelection = (String) toBox.getSelectedItem();
 				String fromSelection = (String) fromBox.getSelectedItem();
 				String daySelection = (String) dayBox.getSelectedItem();
 
 				ArrayList<Flight> matchingFlightList = flightManager.findFlights(fromSelection, toSelection, daySelection);
-
+				
 				flightsModel.clear();
 				
 				for(Flight flight : matchingFlightList) {
@@ -331,8 +337,49 @@ public class FlightsTab extends TabBase
 		
 		//Button Panel
 		
+		class FlightsTabReserveButtonActionListener implements ActionListener{
+			/*
+			 * 	private String code;
+	private String flightCode;
+	private String airline;
+	private String name;
+	private String citizenship;
+	private double cost;
+	private boolean active;
+			 */
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//If feilds are empty, throw a null field exception
+				Flight selected = flightsList.getSelectedValue();
+				Reservation reserve = reservationManager.makeReservation(selected, nameTextField.getText(), citizenshipTextField.getText());
+				//System.out.println(reserve.toString());
+				
+				//rewrite to follow demos ideas
+				try {
+					reservationsFile.writeChars(reserve.getCode());
+					reservationsFile.writeChars(reserve.getFlightCode());
+					String paddedString=reserve.getName();
+					while(paddedString.length()<50) {
+						paddedString=" "+paddedString;
+					}
+					reservationsFile.writeChars(paddedString);
+					paddedString=reserve.getCitizenship();
+					while(paddedString.length()<50) {
+						paddedString=" "+paddedString;
+					}
+					reservationsFile.writeChars(paddedString);
+					reservationsFile.writeDouble(reserve.getCost());
+					reservationsFile.writeBoolean(reserve.isActive());
+				}catch(IOException ex){
+					
+				}
+			}
+			
+		}
+		
 		buttonPanel.setLayout(new GridLayout(1,1));
 		JButton reserveButton = new JButton("Reserve");
+		reserveButton.addActionListener(new FlightsTabReserveButtonActionListener());
 		buttonPanel.add(reserveButton);
 		
 		
@@ -342,6 +389,28 @@ public class FlightsTab extends TabBase
 		
 		inputPanel.setPreferredSize(new Dimension(200, 200));
 		
+		class FlightsTabListActionListener implements ListSelectionListener{
+			/**
+			 * Called when user selects an item in the JList.
+			 */
+			@Override
+			public void valueChanged(ListSelectionEvent ev) {
+				try {
+					Flight selected = flightsList.getSelectedValue();
+				//Add other Values
+					flightTextField.setText(selected.getCode());
+					airlineTextField.setText(selected.getAirlineName());
+					dayTextField.setText(selected.getWeekday());
+					timeTextField.setText(selected.getTime());
+					//maybe format decimal
+					costTextField.setText("$"+selected.getCostPerSeat());
+				}catch(NullPointerException ex) {
+					//exists to stop crashing of program when it new list is selected.
+				}
+			}
+		}
+		
+		flightsList.addListSelectionListener(new FlightsTabListActionListener());
 		
 		return masterPanel;
 	}
@@ -350,14 +419,4 @@ public class FlightsTab extends TabBase
 
 	
 	
-	private class FlightsTabListActionListener implements ListSelectionListener{
-		/**
-		 * Called when user selects an item in the JList.
-		 */
-		@Override
-		public void valueChanged(ListSelectionEvent e) {
-			
-		}
-		
-	}
 }
