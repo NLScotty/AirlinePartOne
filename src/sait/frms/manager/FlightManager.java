@@ -23,22 +23,11 @@ public class FlightManager {
 	public FlightManager() throws IOException {
 		super();
 		this.airports = new ArrayList<String>();
-		Scanner fileReader=new Scanner(new File(AIRPORTS_PATH));
-		while(fileReader.hasNextLine()) {
-			airports.add(fileReader.nextLine());
-		}
-		fileReader.close();
-		fileReader=new Scanner(new File(FLIGHTS_PATH));
-		this.flights = new ArrayList<Flight>();
-		while(fileReader.hasNextLine()) {
-			String[] values = fileReader.nextLine().split(",");	
-			flights.add(new Flight(values[0],values[1],values[2],values[3],values[4],Integer.parseInt(values[5]),Double.parseDouble(values[6])));
-		}
-		/**
-		for(String airport: airports) {
-			System.out.println(airport);
-		}
-		*/
+		
+		//add either here or in main/driver a try catch that deals with file not found exception.
+		populateFlights();
+		populateAirports();
+
 	}
 	public ArrayList<Flight> getFlights() {
 		return flights;
@@ -75,12 +64,22 @@ public class FlightManager {
 		return matchingFlights;
 	}
 	//Maybe for loading csv
-	private void populateFlights() {
+	private void populateFlights() throws FileNotFoundException {
+		Scanner fileReader=new Scanner(new File(FLIGHTS_PATH));
+		this.flights = new ArrayList<Flight>();
+		while(fileReader.hasNextLine()) {
+			String[] values = fileReader.nextLine().split(",");	
+			flights.add(new Flight(values[0],values[1],values[2],values[3],values[4],Integer.parseInt(values[5]),Double.parseDouble(values[6])));
+		}
 		
 	}
 	//Maybe for loading csv
-	private void populateAirports() {
-		
+	private void populateAirports() throws FileNotFoundException {
+		Scanner fileReader=new Scanner(new File(AIRPORTS_PATH));
+		while(fileReader.hasNextLine()) {
+			airports.add(fileReader.nextLine());
+		}
+		fileReader.close();
 	}
 	
 }

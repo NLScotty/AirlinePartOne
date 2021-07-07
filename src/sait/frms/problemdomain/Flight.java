@@ -14,8 +14,7 @@ public class Flight {
 	
 	public Flight(String code, String fromCode, String toCode, String weekday, String time, int seats, double costPerSeat) {
 		super();
-		this.code = code;
-		//this.airlineName = airlineName;
+		this.code=code;
 		parseCode(this.code);
 		this.from = fromCode;
 		this.to = toCode;
@@ -61,17 +60,34 @@ public class Flight {
 	
 	//Other Methods
 	
+	public void reserveSeat() {
+		if(this.seats>0) {
+			this.seats--;
+		}
+	}
+	
 	public boolean isDomestic() {
 		return false;
 	}
-	
+	//maybe if airline doesn't exist, do something.
 	private void parseCode(String code) {
-		//generate airline name
-		//this.airlineName=parsed informaton
+		this.airlineName=code.substring(0,2);
+		
+		if(this.airlineName.equals("OA")) {
+			this.airlineName="Otto Airlines";
+		}
+		else if(this.airlineName.equals("CA")) {
+			this.airlineName="Conned Air";
+		}
+		else if(this.airlineName.equals("TB")) {
+			this.airlineName="Try a Bus Airways";
+		}
+		else if(this.airlineName.equals("VA")) {
+			this.airlineName="Vertical Airways";
+		}
 	}
-	//needs some tweaking
 	@Override
 	public String toString() {
-		return code + airlineName +","+ from + "," + to + ","+ weekday + "," + time + "," + seats + "," + costPerSeat;
+		return code +", From: "+ from + ", To: " + to + ", Day: "+ weekday + ", Cost: " + costPerSeat;
 	}
 }
