@@ -348,32 +348,16 @@ public class FlightsTab extends TabBase
 	private boolean active;
 			 */
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e){
 				//If feilds are empty, throw a null field exception
 				Flight selected = flightsList.getSelectedValue();
-				Reservation reserve = reservationManager.makeReservation(selected, nameTextField.getText(), citizenshipTextField.getText());
-				//System.out.println(reserve.toString());
-				
-				//rewrite to follow demos ideas
 				try {
-					reservationsFile.writeChars(reserve.getCode());
-					reservationsFile.writeChars(reserve.getFlightCode());
-					String paddedString=reserve.getName();
-					while(paddedString.length()<50) {
-						paddedString=" "+paddedString;
-					}
-					reservationsFile.writeChars(paddedString);
-					paddedString=reserve.getCitizenship();
-					while(paddedString.length()<50) {
-						paddedString=" "+paddedString;
-					}
-					reservationsFile.writeChars(paddedString);
-					reservationsFile.writeDouble(reserve.getCost());
-					reservationsFile.writeBoolean(reserve.isActive());
+					Reservation reserve = reservationManager.makeReservation(selected, nameTextField.getText(), citizenshipTextField.getText());
 				}catch(IOException ex){
-					
+					System.out.println("Error Caught");
 				}
 			}
+			
 			
 		}
 		
