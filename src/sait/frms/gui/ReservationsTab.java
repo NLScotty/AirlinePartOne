@@ -1,12 +1,17 @@
 package sait.frms.gui;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.*;
 
 import sait.frms.manager.ReservationManager;
 import sait.frms.manager.FlightManager;
+import sait.frms.problemdomain.Flight;
 import sait.frms.problemdomain.Reservation;
 
 /**
@@ -179,7 +184,27 @@ public class ReservationsTab extends TabBase
 		masterPanel.add(inputPanel, BorderLayout.CENTER);
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
-		
+		class ReservationTabFindReservationsActionListener implements ActionListener{
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				String code = codeTextField.getText();
+				String airline = airlineTextField.getText();
+				String name = nameTextField.getText();
+
+				
+				ArrayList<Reservation> matchingReservationList = reservationManager.findReservations(code,airline,name);
+				
+				reservationsModel.clear();
+				for(Reservation reservation : matchingReservationList) {
+					reservationsModel.addElement(reservation);
+				}
+				
+			}
+			
+		}
+		findReservationButton.addActionListener(new ReservationTabFindReservationsActionListener());
 		
 		return masterPanel;
 	}
@@ -291,7 +316,7 @@ public class ReservationsTab extends TabBase
 		//Button Panel
 		
 		buttonPanel.setLayout(new GridLayout(1,1));
-		JButton reserveButton = new JButton("Reserve");
+		JButton reserveButton = new JButton("Update");
 		buttonPanel.add(reserveButton);
 		
 		
@@ -300,7 +325,34 @@ public class ReservationsTab extends TabBase
 		masterPanel.add(buttonPanel, BorderLayout.SOUTH);
 		
 		inputPanel.setPreferredSize(new Dimension(200, 200));
+	
+		class ReservationTabListActionListener implements ListSelectionListener{
+			/**
+			 * Called when user selects an item in the JList.
+			 */
+			@Override
+			public void valueChanged(ListSelectionEvent ev) {
+				try {
+					Reservation selected = reservationsList.getSelectedValue();
+				//Add other Values
+					codeTextField.setText(selected.getCode());
+					flightTextField.setText(selected.getFlightCode());
+					airlineTextField.setText(selected.getAirline());
+					costTextField.setText("$"+selected.getCost());
+					nameTextField.setText(selected.getName());
+					citizenshipTextField.setText(selected.getCitizenship());
+					if(selected.isActive()) {
+						statusComboBox.setSelectedItem("Active");
+					}else {
+						statusComboBox.setSelectedItem("Inactive");
+					}
+				}catch(NullPointerException ex) {
+					//exists to stop crashing of program when it new list is selected.
+				}
+			}
+		}
 		
+		reservationsList.addListSelectionListener(new ReservationTabListActionListener());
 		
 		return masterPanel;
 	}

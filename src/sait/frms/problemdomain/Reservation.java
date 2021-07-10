@@ -10,8 +10,8 @@ public class Reservation {
 	private boolean active;
 	//Constructors 
 	//Place Holder Constructor: no use yet
-	public Reservation(String code, String flightCode, String airline, String name, String citizenship, double cost,
-			boolean active) {
+
+	public Reservation(String code, String flightCode, String airline, String name, String citizenship, double cost, boolean active) {
 		super();
 		this.code = code;
 		this.flightCode = flightCode;
@@ -20,16 +20,6 @@ public class Reservation {
 		this.citizenship = citizenship;
 		this.cost = cost;
 		this.active = active;
-	}
-	//Used in reservation
-	public Reservation(String randomCode, String code, String airlineName, String name, String citizenship, double costPerSeat) {
-		this.code = randomCode;
-		this.flightCode = code;
-		this.airline = airlineName;
-		this.name = name;
-		this.citizenship = citizenship;
-		this.cost = costPerSeat;
-		this.active = true;
 	}
 	//getters
 	public String getCode() {
