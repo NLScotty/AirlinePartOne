@@ -376,7 +376,7 @@ public class ReservationsTab extends TabBase
                 	if(!r1.isActive()) {
                 		reservationsModel.remove(reservationsList.getSelectedIndex());
                 	}
-                    
+                	JOptionPane.showMessageDialog(null, "Reservation Updated!");
                 }catch(VoidInputException ex) {
                 	JOptionPane.showMessageDialog(null, "Empty inputs: Please fill out Name AND Citizenship");
                 }

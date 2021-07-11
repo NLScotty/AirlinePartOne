@@ -98,7 +98,6 @@ public class FlightsTab extends TabBase
 		panel.setLayout(new BorderLayout());
 		panel.setBorder(new EmptyBorder(10,10,10,10));
 		flightsModel = new DefaultListModel<>();
-		flightsModel.addElement(new Flight("Pizza","Pizza","Pizza","Pizza","Pizza",12,21.5));
 		flightsList = new JList<>(flightsModel);
 		
 		// User can only select one item at a time.
@@ -356,6 +355,7 @@ public class FlightsTab extends TabBase
 	                	throw new NoSeatAvailableException();
 	                }
 					Reservation reserve = reservationManager.makeReservation(selected, nameTextField.getText(), citizenshipTextField.getText());
+					JOptionPane.showMessageDialog(null, "Reservation Created. Your Code is: "+reserve.getCode());
 				}catch(IOException ex){
 					System.out.println("Critical Error: unable to write to file!");
 				}catch(VoidInputException ex) {

@@ -58,7 +58,13 @@ public class Reservation {
 	
 	@Override
 	public String toString() {
+		String statuslabel;
+		if(this.isActive()) {
+			statuslabel="Active";
+		}else {
+			statuslabel="Inactive";
+		}
 		return "Reservation Code: " + code + ", Flight Code: " + flightCode + ", Airline Name: " + airline + ", Customer Name: " + name
-				+ ", Citizenship: " + citizenship + ", Cost: " + cost + ", Status: " + active;
+				+ ", Citizenship: " + citizenship + ", Cost: " + cost + ", Status: " + statuslabel;
 	}
 }

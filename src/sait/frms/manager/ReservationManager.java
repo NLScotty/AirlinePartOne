@@ -20,11 +20,11 @@ public class ReservationManager {
 		String randomCode= generateReservationCode(flight);
 		Reservation reservation=new Reservation(randomCode, flight.getCode(),flight.getAirlineName(),name,citizenship,flight.getCostPerSeat(),true);
 		reservations.add(reservation);
-		this.writeToBinary(reservation);
+		this.persist(reservation);
 		return reservation;
 	}
 	
-	private void writeToBinary(Reservation reservation) throws IOException {
+	private void persist(Reservation reservation) throws IOException {
 		this.raf.writeUTF(reservation.getCode());
 		this.raf.writeUTF(reservation.getFlightCode());
 		this.raf.writeUTF(String.format("%-50s", reservation.getAirline()));
@@ -53,18 +53,6 @@ public class ReservationManager {
 		}
 		return null;
 	}
-
-	public void persist() throws IOException {
-		raf.close();
-		File binFile=new File("res/Reservations.bin");
-		binFile.delete();
-		this.raf = new RandomAccessFile("res/Reservations.bin", "rw");
-		for(Reservation r : reservations) {
-			if(r.isActive()) {
-				writeToBinary(r);
-			}
-		}
-	}
 	
 	private int getAvaliableSeats(Flight flight){
 		return flight.getSeats();
@@ -87,16 +75,7 @@ public class ReservationManager {
 			
 			if (r2.getCode().equals(r1.getCode()) && r2.getFlightCode().equals(r1.getFlightCode())) {
 				this.raf.seek(position);
-				/*
-				this.raf.writeUTF(r1.getCode());
-				this.raf.writeUTF(r1.getFlightCode());
-				this.raf.writeUTF(r1.getAirline());
-				this.raf.writeUTF(r1.getName());
-				this.raf.writeUTF(r1.getCitizenship());
-				this.raf.writeDouble(r1.getCost());
-				this.raf.writeBoolean(r1.isActive());
-				*/
-				writeToBinary(r1);
+				persist(r1);
 				break;
 			}
 		}
