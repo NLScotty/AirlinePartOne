@@ -162,9 +162,7 @@ public class MainWindow extends JFrame
 	 * @author Nick Hamnett, Mohamed
 	 * @version January 2, 2020
 	 */
-private class TabButtonActionListener implements ActionListener 
-	{
-
+	private class TabButtonActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) 
 		{
@@ -177,6 +175,7 @@ private class TabButtonActionListener implements ActionListener
 				cardLayout.show(centerPanel, TAB_RESERVATIONS);
 			}
 		}
-		
 	}
+	
+	
 }

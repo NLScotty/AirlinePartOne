@@ -19,6 +19,7 @@ public class ReservationManager {
 	public Reservation makeReservation(Flight flight, String name, String citizenship) throws IOException {
 		String randomCode= generateReservationCode(flight);
 		Reservation reservation=new Reservation(randomCode, flight.getCode(),flight.getAirlineName(),name,citizenship,flight.getCostPerSeat(),true);
+		reservations.add(reservation);
 		this.writeToBinary(reservation);
 		return reservation;
 	}
@@ -31,7 +32,6 @@ public class ReservationManager {
 		this.raf.writeUTF(String.format("%-50s", reservation.getCitizenship()));
 		this.raf.writeDouble(reservation.getCost());
 		this.raf.writeBoolean(reservation.isActive());
-		
 	}
 	//tweaking
 	public ArrayList<Reservation> findReservations(String code, String airline, String name) {
@@ -39,7 +39,7 @@ public class ReservationManager {
 		
 		ArrayList<Reservation> matchingReservations = new ArrayList<Reservation>();
 		for(int i=0;i<this.reservations.size();i++) {
-			if((this.reservations.get(i).getCode().equals(code) || code.equals("")) && (this.reservations.get(i).getAirline().equals(airline)|| airline.equals(""))  && (this.reservations.get(i).getName().contains(name) || name.equals(""))  ) {
+			if((this.reservations.get(i).getCode().toUpperCase().equals(code.toUpperCase()) || code.equals("")) && (this.reservations.get(i).getAirline().toUpperCase().equals(airline.toUpperCase())|| airline.equals(""))  && (this.reservations.get(i).getName().toUpperCase().contains(name.toUpperCase()) || name.equals(""))  ) {
 				matchingReservations.add(reservations.get(i));
 			}
 		}
@@ -53,23 +53,67 @@ public class ReservationManager {
 		}
 		return null;
 	}
-	/**
-	public void persist() {
-		
+
+	public void persist() throws IOException {
+		raf.close();
+		File binFile=new File("res/Reservations.bin");
+		binFile.delete();
+		this.raf = new RandomAccessFile("res/Reservations.bin", "rw");
+		for(Reservation r : reservations) {
+			if(r.isActive()) {
+				writeToBinary(r);
+			}
+		}
 	}
-	*/
+	
 	private int getAvaliableSeats(Flight flight){
 		return flight.getSeats();
 	}
 	private String generateReservationCode(Flight flight){
 		String code="";
-		if(flight.isDomestic()==true){
+		if(flight.isDomestic()){
 			code=code+"D";
 		}else{
 			code=code+"I";
 		}
 		int randomNumber= new Random().nextInt(9000) + 1000;
 		return code+randomNumber;
+	}
+	
+	public void updateReservation(Reservation r1) throws IOException {
+		for (long position = 0; position < this.raf.length(); position += RECORD_SIZE) {
+			this.raf.seek(position);
+			Reservation r2 = new Reservation(this.raf.readUTF(),this.raf.readUTF(),this.raf.readUTF().trim(),this.raf.readUTF().trim(),this.raf.readUTF().trim(),this.raf.readDouble(),this.raf.readBoolean());
+			
+			if (r2.getCode().equals(r1.getCode()) && r2.getFlightCode().equals(r1.getFlightCode())) {
+				this.raf.seek(position);
+				/*
+				this.raf.writeUTF(r1.getCode());
+				this.raf.writeUTF(r1.getFlightCode());
+				this.raf.writeUTF(r1.getAirline());
+				this.raf.writeUTF(r1.getName());
+				this.raf.writeUTF(r1.getCitizenship());
+				this.raf.writeDouble(r1.getCost());
+				this.raf.writeBoolean(r1.isActive());
+				*/
+				writeToBinary(r1);
+				break;
+			}
+		}
+		if(!r1.isActive()) {
+			for(int i=0; i<reservations.size();i++) {
+				if(reservations.get(i).getCode().equals(r1.getCode()) && reservations.get(i).getFlightCode().equals(r1.getFlightCode())) {
+					reservations.remove(i);
+				}
+			}
+		}else {
+			for(int i=0; i<reservations.size();i++) {
+				if(reservations.get(i).getCode().equals(r1.getCode()) && reservations.get(i).getFlightCode().equals(r1.getFlightCode())) {
+					reservations.remove(i);
+				}
+			}
+			reservations.add(r1);
+		}
 	}
 	
 	private void populateFromBinary() throws IOException{
@@ -79,5 +123,14 @@ public class ReservationManager {
 			if (r.isActive())
 				this.reservations.add(r);
 		}
+	}
+	public boolean seatAvailable(Flight flight) {
+		int reservedSeats=0;
+		for(Reservation reservation: reservations) {
+			if(reservation.getFlightCode().equals(flight.getCode()) && reservation.isActive()) {
+				reservedSeats++;
+			}
+		}
+		return reservedSeats<flight.getSeats();
 	}
 }

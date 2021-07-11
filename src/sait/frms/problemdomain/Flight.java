@@ -66,7 +66,12 @@ public class Flight {
 		}
 	}
 	
+	
+	//change
 	public boolean isDomestic() {
+		if(this.from.substring(0,1).equals(this.to.substring(0,1)) && this.from.substring(0,1).equals("Y")) {
+			return true;
+		}
 		return false;
 	}
 	//maybe if airline doesn't exist, do something.

@@ -82,4 +82,35 @@ public class FlightManager {
 		fileReader.close();
 	}
 	
+	public String[] getUniqueToLocations(){
+		ArrayList<String> uniqueLocationList=new ArrayList<String>();
+		for(Flight flight : this.flights) {
+			if(!uniqueLocationList.contains(flight.getTo())) {
+				uniqueLocationList.add(flight.getTo());
+			}
+		}
+		String[] result = new String[uniqueLocationList.size()];
+		for(int i=0;i<result.length;i++) {
+			result[i]=uniqueLocationList.get(i);
+		}
+		return result;
+	}
+	
+	public String[] getUniqueFromLocations(){
+		ArrayList<String> uniqueLocationList=new ArrayList<String>();
+		for(Flight flight : this.flights) {
+			if(!uniqueLocationList.contains(flight.getFrom())) {
+				uniqueLocationList.add(flight.getFrom());
+			}
+		}
+		//String[] result = (String[]) uniqueLocationList.toArray();
+		
+		String[] result = new String[uniqueLocationList.size()];
+		for(int i=0;i<result.length;i++) {
+			result[i]=uniqueLocationList.get(i);
+		}
+		return result;
+	}
+	
+	
 }

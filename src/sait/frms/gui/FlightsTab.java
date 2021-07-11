@@ -131,8 +131,13 @@ public class FlightsTab extends TabBase
 		
 		//Input Panel
 		
-		String[] toValues = {"AMS","ATL","CDG","DEL","DFW","DXB","FRA","HKG","HND","LHR","ORD","PEK","PVG","YEG","YOW","YUL","YVR","YWG","YYC","YYZ"} ;
-		String[] fromValues = {"AMS","ATL","CDG","DEL","DFW","DXB","FRA","HKG","HND","LHR","ORD","PEK","PVG","YEG","YOW","YUL","YVR","YWG","YYC","YYZ"} ;
+		
+		//String[] toValues = {"AMS","ATL","CDG","DEL","DFW","DXB","FRA","HKG","HND","LHR","ORD","PEK","PVG","YEG","YOW","YUL","YVR","YWG","YYC","YYZ"} ;
+		//String[] fromValues = {"AMS","ATL","CDG","DEL","DFW","DXB","FRA","HKG","HND","LHR","ORD","PEK","PVG","YEG","YOW","YUL","YVR","YWG","YYC","YYZ"} ;
+		
+		String[] toValues= flightManager.getUniqueToLocations();
+		String[] fromValues= flightManager.getUniqueFromLocations();
+		
 		String[] dayValues = {"Any","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
 		
 		inputPanel.setLayout(new GridBagLayout());
@@ -338,24 +343,29 @@ public class FlightsTab extends TabBase
 		//Button Panel
 		
 		class FlightsTabReserveButtonActionListener implements ActionListener{
-			/*
-			 * 	private String code;
-	private String flightCode;
-	private String airline;
-	private String name;
-	private String citizenship;
-	private double cost;
-	private boolean active;
-			 */
+
 			@Override
 			public void actionPerformed(ActionEvent e){
 				//If feilds are empty, throw a null field exception
 				Flight selected = flightsList.getSelectedValue();
 				try {
+	                if(nameTextField.getText().equals("") || citizenshipTextField.getText().equals("")) {
+	                	throw new VoidInputException();
+	                }
+	                if(!reservationManager.seatAvailable(selected)) {
+	                	throw new NoSeatAvailableException();
+	                }
 					Reservation reserve = reservationManager.makeReservation(selected, nameTextField.getText(), citizenshipTextField.getText());
 				}catch(IOException ex){
-					System.out.println("Error Caught");
-				}
+					System.out.println("Critical Error: unable to write to file!");
+				}catch(VoidInputException ex) {
+                	JOptionPane.showMessageDialog(null, "Empty inputs: Please fill out Name AND Citizenship");
+                }catch(NoSeatAvailableException ex) {
+                	JOptionPane.showMessageDialog(null, "Flight Full: Unable to make reservation");
+                }catch(NullPointerException ex) {
+                	JOptionPane.showMessageDialog(null, "No Flight Selected: Please select a flight!");
+                }
+				
 			}
 			
 			

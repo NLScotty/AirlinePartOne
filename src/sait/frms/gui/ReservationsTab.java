@@ -3,6 +3,7 @@ package sait.frms.gui;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -351,6 +352,46 @@ public class ReservationsTab extends TabBase
 				}
 			}
 		}
+		
+		
+		//teaking here needed
+		class UpdateButtonActionListener implements ActionListener{
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                	boolean active;
+                    if(statusComboBox.getSelectedItem() == "Active") {
+                        active=true;
+                    }else {
+                        active=false;                 
+                    }
+                    if(nameTextField.getText().equals("") || citizenshipTextField.getText().equals("")) {
+                    	throw new VoidInputException();
+                    }
+                    String value=costTextField.getText().substring(1);
+                	Reservation r1 = new Reservation(codeTextField.getText(),flightTextField.getText(),airlineTextField.getText(),nameTextField.getText(),citizenshipTextField.getText(),Double.parseDouble(value),active);
+                	reservationManager.updateReservation(r1);
+                	reservationsModel.setElementAt(r1,reservationsList.getSelectedIndex());
+                	if(!r1.isActive()) {
+                		reservationsModel.remove(reservationsList.getSelectedIndex());
+                	}
+                    
+                }catch(VoidInputException ex) {
+                	JOptionPane.showMessageDialog(null, "Empty inputs: Please fill out Name AND Citizenship");
+                }
+                catch(IOException ex) {
+                	System.out.println(ex.getMessage());
+                	System.out.print("Reservation File Not found");	
+                }catch(Exception ex) {
+                	JOptionPane.showMessageDialog(null, "No Reservation Selected: Please select a Reservation!");
+                }
+            }
+
+ 
+
+        }
+        reserveButton.addActionListener(new UpdateButtonActionListener());
 		
 		reservationsList.addListSelectionListener(new ReservationTabListActionListener());
 		
